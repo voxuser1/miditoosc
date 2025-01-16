@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Step 1: Create the shell script `start_midi_listener.sh`
+echo "Creating start_midi_listener.sh..."
+cat << 'EOF' > /home/pi/start_midi_listener.sh
+#!/bin/bash
+source /home/pi/myenv/bin/activate
+python3 /home/pi/midi_listener.py
+EOF
+
+# Make the shell script executable
+chmod +x /home/pi/start_midi_listener.sh
+
+# Step 2: Create the systemd service file
+SERVICE_FILE="/etc/systemd/system/midi_listener.service"
+echo "Creating systemd service file at $SERVICE_FILE..."
+sudo bash -c "cat << 'EOF' > $SERVICE_FILE
+[Unit]
+Description=MIDI Listener Script
+After=multi-user.target
+
+[Service]
+ExecStart=/home/pi/start_midi_listener.sh
+WorkingDirectory=/home/pi
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
+EOF"
+
+# Reload systemd daemon
+sudo systemctl daemon-reload
+
+# Enable the service to start on boot
+sudo systemctl enable midi_listener.service
+
+# Start the service immediately
+sudo systemctl start midi_listener.service
+
+# Check the service status
+echo "Checking service status..."
+sudo systemctl status midi_listener.service
