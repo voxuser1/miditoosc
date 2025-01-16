@@ -1,0 +1,24 @@
+1. Preparing the Virtual Environment:
+
+- Install the required packages:
+
+1. Open the terminal and update your system:
+  
+   sudo apt update && sudo apt upgrade
+ 
+
+2. Install the required Python tools:
+
+   sudo apt install python3-venv python3-pip
+  
+
+- Create a virtual environment:
+
+1. Create the virtual environment in the desired directory:
+  
+   python3 -m venv /home/pi/myenv
+
+
+2. Activate the virtual environment:
+  
+   source /home/pi/myenv/bin/activate
