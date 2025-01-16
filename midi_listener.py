@@ -1,8 +1,12 @@
 import mido
-from mido import MidiInput
-from pythonosc import udp_client
-import time
+from pythonosc.udp_client import SimpleUDPClient
 
+# OSC configuration
+OSC_IP = "127.0.0.1"  # Target IP address
+OSC_PORT = 1234       # Target port for RNBO patches
+OSC_PATH = "/rnbo/inst/0/presets/load"
+
+# Set up OSC client
 osc_client = SimpleUDPClient(OSC_IP, OSC_PORT)
 
 def main():
@@ -31,7 +35,7 @@ def main():
 
         try:
             for message in inport:
-                # Check for Program Change messages
+                # Check for program change messages
                 if message.type == 'program_change' and message.channel == 15:
                     program_number = message.program
                     print(f"Program Change received: Program {program_number}, Channel {message.channel + 1}")
@@ -41,10 +45,7 @@ def main():
                     print(f"OSC sent: {OSC_PATH} {program_number}")
 
         except KeyboardInterrupt:
-            print("\nTerminated.")
+            print("\nExiting.")
 
 if __name__ == "__main__":
     main()
-
-# Save and close the file.
-# Start the program with: python3 midi_listener.py
